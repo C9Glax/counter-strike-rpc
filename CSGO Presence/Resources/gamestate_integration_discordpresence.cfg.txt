@@ -1,0 +1,13 @@
+{
+    "uri" "{uri}"
+    "timeout" "5.0"
+    "buffer" "0.1"
+    "heartbeat" "15.0"
+    "data"
+   {
+        "map" "1"
+        "round" "1"
+        "player_match_stats" "1"
+        "player_id" "1"
+   }
+}
