@@ -6,13 +6,13 @@ using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace CSGO_Presence
 {
     public class Service : System.ServiceProcess.ServiceBase
     {
         private string uri;
-        private readonly Thread httpListener;
 
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
@@ -27,12 +27,13 @@ namespace CSGO_Presence
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
 
+
         public Service()
         {
+            this.ServiceName = "CSGORichPresence";
             this.UpdateServiceStatus(ServiceState.SERVICE_START_PENDING);
             this.GetFreeUri();
-            this.httpListener = new Thread(this.ListenerThread);
-            this.httpListener.Start();
+            this.Listen();
             this.CsgoInstallation();
             this.UpdateServiceStatus(ServiceState.SERVICE_RUNNING);
         }
@@ -46,19 +47,19 @@ namespace CSGO_Presence
             return this.uri;
         }
 
-        private void ListenerThread()
+        private void Listen()
         {
-            HttpListener listener = new HttpListener();
-            listener.Prefixes.Add(this.uri);
-            try
+            Task.Run(() =>
             {
-                listener.Start();
-                System.Console.Out.WriteLine("jap");
-                while (listener.IsListening)
+                try
                 {
+                    HttpListener listener = new HttpListener();
+                    listener.Prefixes.Add(this.uri);
+                    listener.Start();
                     HttpListenerContext context = listener.GetContext();
+                    HttpListenerRequest request = context.Request;
                     HttpListenerResponse response = context.Response;
-                    dynamic JSON = JObject.Parse(this.GetRequestData(context.Request));
+                    dynamic JSON = JObject.Parse(this.GetRequestData(request));
                     this.UpdateDiscordPresence(JSON);
                     string responseString = "";
                     byte[] buffer = Encoding.UTF8.GetBytes(responseString);
@@ -66,13 +67,16 @@ namespace CSGO_Presence
                     Stream output = response.OutputStream;
                     output.Write(buffer, 0, buffer.Length);
                     output.Close();
+                    listener.Stop();
+                    this.Listen();
                 }
-            }
-            catch (ThreadAbortException)
-            {
-                listener.Stop();
-                this.UpdateServiceStatus(ServiceState.SERVICE_STOPPED);
-            }
+                catch (System.Net.HttpListenerException)
+                {
+                    this.Listen();
+                }
+                this.Listen();
+            });
+            
         }
 
         private string GetRequestData(HttpListenerRequest request)
@@ -95,7 +99,8 @@ namespace CSGO_Presence
 
         private void UpdateDiscordPresence(dynamic jsondata)
         {
-            File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\test.json", jsondata);
+            File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\test.json", "yalla");
+            //File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\test.json", jsondata);
             RichPresence presence = new RichPresence()
             {
                 

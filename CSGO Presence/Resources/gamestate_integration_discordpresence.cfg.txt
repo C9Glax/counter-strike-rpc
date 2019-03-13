@@ -1,3 +1,4 @@
+"CSGO PresenceService V1"
 {
     "uri" "{uri}"
     "timeout" "5.0"
