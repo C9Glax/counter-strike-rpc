@@ -1,12 +1,10 @@
 ﻿using DiscordRPC;
 using System.IO;
-using System.Collections.Generic;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
 using Newtonsoft.Json.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
 namespace CSGO_Presence
 {
@@ -14,20 +12,20 @@ namespace CSGO_Presence
     {
         private string uri;
         private static DiscordRpcClient discordClient;
+        private readonly Thread listenerThread;
 
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
 
-        private void UpdateServiceStatus(ServiceState state)
+        public void UpdateServiceStatus(ServiceState state)
         {
             ServiceStatus serviceStatus = new ServiceStatus
             {
                 dwCurrentState = state,
-                dwWaitHint = 100000
+                dwWaitHint = 10000
             };
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
-
 
         public CSGORichPresence()
         {
@@ -37,8 +35,8 @@ namespace CSGO_Presence
             discordClient.Initialize();
             this.GetFreeUri();
             this.CsgoInstallation();
-            this.UpdateServiceStatus(ServiceState.SERVICE_RUNNING);
-            this.Listen();
+            this.listenerThread = new Thread(this.Listen);
+            this.listenerThread.Start();
         }
 
         private string GetFreeUri()
@@ -54,18 +52,22 @@ namespace CSGO_Presence
         {
             try
             {
-                HttpListener listener = new HttpListener();
-                listener.Prefixes.Add(this.uri + "/");
-                listener.Start();
-                HttpListenerContext context = listener.GetContext();
-                HttpListenerResponse response = context.Response;
-                dynamic Json = JObject.Parse(this.GetRequestData(context.Request));
-                response.StatusCode = 200;
-                Stream output = response.OutputStream;
-                output.Write(new byte[1], 0, (new byte[1]).Length);
-                listener.Stop();
-                this.UpdateDiscordPresence(Json);
-                this.Listen();
+                while (true)
+                {
+                    this.UpdateServiceStatus(ServiceState.SERVICE_RUNNING);
+                    HttpListener listener = new HttpListener();
+                    listener.Prefixes.Add(this.uri + "/");
+                    listener.Start();
+                    HttpListenerContext context = listener.GetContext();
+                    HttpListenerResponse response = context.Response;
+                    dynamic Json = JObject.Parse(this.GetRequestData(context.Request));
+                    response.StatusCode = 200;
+                    Stream output = response.OutputStream;
+                    output.Write(new byte[1], 0, (new byte[1]).Length);
+                    listener.Stop();
+                    this.UpdateDiscordPresence(Json);
+                    this.Listen();
+                }
             }
             catch (ThreadAbortException)
             {
@@ -135,34 +137,17 @@ namespace CSGO_Presence
             }
             else if (jsondata.player.activity == "menu")
             {
-                presence.Details = "CS:GO - In Menu";
+                presence.Details = "In Menu";
                 presence.State = "Lobby";
             }
+            else
+            {
+                presence.Details = jsondata.player.activity;
+                presence.State = "Unknown Activity";
+            }
+            presence.Assets.LargeImageKey = "csgologo";
 
             discordClient.SetPresence(presence);
         }
     }
-
-    public enum ServiceState
-    {
-        SERVICE_STOPPED = 0x00000001,
-        SERVICE_START_PENDING = 0x00000002,
-        SERVICE_STOP_PENDING = 0x00000003,
-        SERVICE_RUNNING = 0x00000004,
-        SERVICE_CONTINUE_PENDING = 0x00000005,
-        SERVICE_PAUSE_PENDING = 0x00000006,
-        SERVICE_PAUSED = 0x00000007,
-    }
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct ServiceStatus
-    {
-        public int dwServiceType;
-        public ServiceState dwCurrentState;
-        public int dwControlsAccepted;
-        public int dwWin32ExitCode;
-        public int dwServiceSpecificExitCode;
-        public int dwCheckPoint;
-        public int dwWaitHint;
-    };
 }
