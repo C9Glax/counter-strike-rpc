@@ -4,3 +4,5 @@
 
 /.vs/CSGO Presence/v15/Server/sqlite3
 /.vs
+/bin/debug
+/obj

@@ -8,6 +8,9 @@ using System.Runtime.InteropServices;
 
 namespace CSGO_Presence
 {
+    /// <summary>
+    /// Provides Discord with a RichPresence with Information from CSGO 
+    /// </summary>
     public class CSGORichPresence : System.ServiceProcess.ServiceBase
     {
         private string uri;
@@ -17,6 +20,10 @@ namespace CSGO_Presence
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
 
+        /// <summary>
+        /// For Windows Service
+        /// </summary>
+        /// <param name="state">ex. Running, Stopped</param>
         public void UpdateServiceStatus(ServiceState state)
         {
             ServiceStatus serviceStatus = new ServiceStatus
@@ -27,9 +34,11 @@ namespace CSGO_Presence
             SetServiceStatus(this.ServiceHandle, ref serviceStatus);
         }
 
+        /// <summary>
+        /// Creates all Objects and creates a httpListener-Thread
+        /// </summary>
         public CSGORichPresence()
         {
-            this.ServiceName = "CSGORichPresence";
             this.UpdateServiceStatus(ServiceState.SERVICE_START_PENDING);
             discordClient = new DiscordRpcClient("555446389320974348", "730", false, -1, null);
             discordClient.Initialize();
@@ -37,8 +46,21 @@ namespace CSGO_Presence
             this.CsgoInstallation();
             this.listenerThread = new Thread(this.Listen);
             this.listenerThread.Start();
+            System.Threading.Tasks.Task.Run(() =>
+            {
+                while (true)
+                {
+                    if (System.Diagnostics.Process.GetProcessesByName("csgo").Length < 1)
+                        discordClient.ClearPresence();
+                    Thread.Sleep(100);
+                }
+            });
         }
 
+        /// <summary>
+        /// Returns a URI with a free port to send Data to
+        /// </summary>
+        /// <returns></returns>
         private string GetFreeUri()
         {
             TcpListener l = new TcpListener(IPAddress.Loopback, 0);
@@ -48,12 +70,16 @@ namespace CSGO_Presence
             return this.uri;
         }
 
+        /// <summary>
+        /// Listens on URI for State-Information and handles responses
+        /// </summary>
         private void Listen()
         {
             try
             {
                 while (true)
                 {
+                    
                     this.UpdateServiceStatus(ServiceState.SERVICE_RUNNING);
                     HttpListener listener = new HttpListener();
                     listener.Prefixes.Add(this.uri + "/");
@@ -77,6 +103,11 @@ namespace CSGO_Presence
             }
         }
 
+        /// <summary>
+        /// Converts HttpListenerRequest into useable JSON data
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private string GetRequestData(HttpListenerRequest request)
         {
             StreamReader reader = new StreamReader(request.InputStream, request.ContentEncoding);
@@ -86,15 +117,23 @@ namespace CSGO_Presence
             return s;
         }
 
+        //TODO ALLOW ALTERNATE INSTALLATION PATHS
+        /// <summary>
+        /// Tries to install the gamestate-integration
+        /// </summary>
         private void CsgoInstallation()
         {
             string file = Properties.Resources.gamestate_integration_discordpresence_cfg.Replace("{uri}", this.uri);
             if (File.Exists(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo.exe"))
                 File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\gamestate_integration_discordpresence.cfg", file);
             else
-                File.WriteAllText(@"C:\gamestate_integration_discordpresence.cfg", file);
+                this.Stop();
         }
 
+        /// <summary>
+        /// Extracts needed information from the JSON gamestate-data and sends a created RichPresence to Discord
+        /// </summary>
+        /// <param name="jsondata"></param>
         private void UpdateDiscordPresence(dynamic jsondata)
         {
             RichPresence presence = new RichPresence() { Assets = new Assets() };
@@ -103,12 +142,18 @@ namespace CSGO_Presence
             {
                 if (jsondata.player.team == "T")
                 {
-                    presence.State = $"{jsondata.map.team_ct.name} {jsondata.map.team_t.score} - {jsondata.map.team_ct.score} CT";
+                    if(!jsondata.map.team_t.name.ToUpper().equals(jsondata.map.team_t.name.ToLower()))
+                        presence.State = $"{jsondata.map.team_t.name} [{jsondata.map.team_t.score} - {jsondata.map.team_ct.score}] CT";
+                    else
+                        presence.State = $"T [{jsondata.map.team_t.score} - {jsondata.map.team_ct.score}] CT";
                     presence.Assets.SmallImageKey = "tcoin";
                 }
                 else
                 {
-                    presence.State = $"{jsondata.map.team_ct.name} {jsondata.map.team_ct.score} - {jsondata.map.team_t.score} T";
+                    if (!jsondata.map.team_ct.name.ToUpper().equals(jsondata.map.team_ct.name.ToLower()))
+                        presence.State = $"{jsondata.map.team_ct.name} [{jsondata.map.team_ct.score} - {jsondata.map.team_t.score}] T";
+                    else
+                        presence.State = $"CT [{jsondata.map.team_ct.score} - {jsondata.map.team_t.score}] T";
                     presence.Assets.SmallImageKey = "ctcoin";
                 }
 
@@ -131,7 +176,7 @@ namespace CSGO_Presence
 
                 string mapname = jsondata.map.name;
                 if (mapname.StartsWith("workshop"))
-                    mapname = mapname.Split('/')[1];
+                    mapname = "Workshop Map";
 
                 presence.Details = $"{jsondata.map.mode} on {mapname}";
             }
@@ -139,6 +184,9 @@ namespace CSGO_Presence
             {
                 presence.Details = "In Menu";
                 presence.State = "Lobby";
+            }else if(jsondata.player.activity == "textinput")
+            {
+                return;
             }
             else
             {
