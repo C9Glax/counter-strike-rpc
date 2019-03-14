@@ -142,18 +142,12 @@ namespace CSGO_Presence
             {
                 if (jsondata.player.team == "T")
                 {
-                    if(!jsondata.map.team_t.name.ToUpper().equals(jsondata.map.team_t.name.ToLower()))
-                        presence.State = $"{jsondata.map.team_t.name} [{jsondata.map.team_t.score} - {jsondata.map.team_ct.score}] CT";
-                    else
-                        presence.State = $"T [{jsondata.map.team_t.score} - {jsondata.map.team_ct.score}] CT";
+                    presence.State = $"(T) {jsondata.map.team_t.name} [{jsondata.map.team_t.score} - {jsondata.map.team_ct.score}] (CT)";
                     presence.Assets.SmallImageKey = "tcoin";
                 }
                 else
                 {
-                    if (!jsondata.map.team_ct.name.ToUpper().equals(jsondata.map.team_ct.name.ToLower()))
-                        presence.State = $"{jsondata.map.team_ct.name} [{jsondata.map.team_ct.score} - {jsondata.map.team_t.score}] T";
-                    else
-                        presence.State = $"CT [{jsondata.map.team_ct.score} - {jsondata.map.team_t.score}] T";
+                    presence.State = $"(CT) {jsondata.map.team_ct.name} [{jsondata.map.team_ct.score} - {jsondata.map.team_t.score}] (T)";
                     presence.Assets.SmallImageKey = "ctcoin";
                 }
 

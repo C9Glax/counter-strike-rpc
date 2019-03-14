@@ -54,3 +54,45 @@ Die EventLog-Quelle CSGORichPresence wird entfernt.
 Der Dienst CSGORichPresence wird vom System entfernt...
 Dienst CSGORichPresence wurde vom System entfernt.
 Es wird versucht, den Dienst CSGORichPresence zu beenden.
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Dienst CSGORichPresence wird installiert...
+Die EventLog-Quelle CSGORichPresence im Protokoll Application wird erstellt...
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird zurückgesetzt.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Der vorherige Zustand des Ereignisprotokolls für die Quelle CSGORichPresence wird wiederhergestellt.
+Während der Rollbackphase des Installers System.Diagnostics.EventLogInstaller ist eine Ausnahme aufgetreten.
+System.Security.SecurityException: Die Quelle wurde nicht gefunden, aber einige oder alle Ereignisprotokolle konnten nicht durchsucht werden. Protokolle, auf die kein Zugriff möglich war: Security, State.
+Während der Rollbackphase der Installation ist eine Ausnahme aufgetreten. Diese Ausnahme wird ignoriert, und der Rollback wird fortgesetzt. Der ursprüngliche Zustand des Computers wird jedoch möglicherweise nicht vollständig wiederhergestellt, nachdem der Rollback beendet ist.
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Dienst CSGORichPresence wird installiert...
+Dienst CSGORichPresence wurde installiert.
+Die EventLog-Quelle CSGORichPresence im Protokoll Application wird erstellt...
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird ausgeführt.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird installiert.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Dienst CSGORichPresence wird installiert...
+Die EventLog-Quelle CSGORichPresence im Protokoll Application wird erstellt...
+Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe wird zurückgesetzt.
+Betroffene Parameter:
+   logtoconsole = 
+   logfile = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog
+   assemblypath = D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe
+Der vorherige Zustand des Ereignisprotokolls für die Quelle CSGORichPresence wird wiederhergestellt.

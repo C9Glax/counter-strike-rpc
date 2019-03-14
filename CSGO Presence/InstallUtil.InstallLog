@@ -1,0 +1,17 @@
+﻿
+Eine transaktive Installation wird ausgeführt.
+
+Die Installationsphase wird gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe.
+Die Datei befindet sich in D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog.
+
+Während der Installationsphase ist eine Ausnahme aufgetreten.
+System.Security.SecurityException: Die Quelle wurde nicht gefunden, aber einige oder alle Ereignisprotokolle konnten nicht durchsucht werden. Protokolle, auf die kein Zugriff möglich war: Security, State.
+
+Die Rollbackphase der Installation wird gestartet.
+Die Protokolldatei enthält den Fortschritt der Assembly D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.exe.
+Die Datei befindet sich in D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Release\CSGO Presence.InstallLog.
+
+Die Rollbackphase wurde erfolgreich abgeschlossen.
+
+Die transaktive Installation ist abgeschlossen.
