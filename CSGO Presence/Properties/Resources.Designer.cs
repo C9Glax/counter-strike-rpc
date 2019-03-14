@@ -61,7 +61,8 @@ namespace CSGO_Presence.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {
+        ///   Sucht eine lokalisierte Zeichenfolge, die &quot;CSGO PresenceService v.1&quot;
+        ///{
         ///    &quot;uri&quot; &quot;{uri}&quot;
         ///    &quot;timeout&quot; &quot;5.0&quot;
         ///    &quot;buffer&quot; &quot;0.1&quot;
@@ -71,6 +72,7 @@ namespace CSGO_Presence.Properties {
         ///        &quot;map&quot; &quot;1&quot;
         ///        &quot;round&quot; &quot;1&quot;
         ///        &quot;player_match_stats&quot; &quot;1&quot;
+        ///		&quot;round&quot; &quot;1&quot;
         ///        &quot;player_id&quot; &quot;1&quot;
         ///   }
         ///} ähnelt.

@@ -1,6 +1,6 @@
 ﻿using DiscordRPC;
 using System.IO;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading;
 using System.Net;
 using System.Net.Sockets;
@@ -10,9 +10,10 @@ using System.Threading.Tasks;
 
 namespace CSGO_Presence
 {
-    public class Service : System.ServiceProcess.ServiceBase
+    public class CSGORichPresence : System.ServiceProcess.ServiceBase
     {
         private string uri;
+        private static DiscordRpcClient discordClient;
 
         [DllImport("advapi32.dll", SetLastError = true)]
         private static extern bool SetServiceStatus(System.IntPtr handle, ref ServiceStatus serviceStatus);
@@ -28,55 +29,50 @@ namespace CSGO_Presence
         }
 
 
-        public Service()
+        public CSGORichPresence()
         {
             this.ServiceName = "CSGORichPresence";
             this.UpdateServiceStatus(ServiceState.SERVICE_START_PENDING);
+            discordClient = new DiscordRpcClient("555446389320974348", "730", false, -1, null);
+            discordClient.Initialize();
             this.GetFreeUri();
-            this.Listen();
             this.CsgoInstallation();
             this.UpdateServiceStatus(ServiceState.SERVICE_RUNNING);
+            this.Listen();
         }
 
         private string GetFreeUri()
         {
             TcpListener l = new TcpListener(IPAddress.Loopback, 0);
             l.Start();
-            this.uri = @"http://127.0.0.1:" + ((IPEndPoint)l.LocalEndpoint).Port + "/";
+            this.uri = @"http://127.0.0.1:" + ((IPEndPoint)l.LocalEndpoint).Port;
             l.Stop();
             return this.uri;
         }
 
         private void Listen()
         {
-            Task.Run(() =>
+            try
             {
-                try
-                {
-                    HttpListener listener = new HttpListener();
-                    listener.Prefixes.Add(this.uri);
-                    listener.Start();
-                    HttpListenerContext context = listener.GetContext();
-                    HttpListenerRequest request = context.Request;
-                    HttpListenerResponse response = context.Response;
-                    dynamic JSON = JObject.Parse(this.GetRequestData(request));
-                    this.UpdateDiscordPresence(JSON);
-                    string responseString = "";
-                    byte[] buffer = Encoding.UTF8.GetBytes(responseString);
-                    response.ContentLength64 = buffer.Length;
-                    Stream output = response.OutputStream;
-                    output.Write(buffer, 0, buffer.Length);
-                    output.Close();
-                    listener.Stop();
-                    this.Listen();
-                }
-                catch (System.Net.HttpListenerException)
-                {
-                    this.Listen();
-                }
+                HttpListener listener = new HttpListener();
+                listener.Prefixes.Add(this.uri + "/");
+                listener.Start();
+                HttpListenerContext context = listener.GetContext();
+                HttpListenerResponse response = context.Response;
+                dynamic Json = JObject.Parse(this.GetRequestData(context.Request));
+                response.StatusCode = 200;
+                Stream output = response.OutputStream;
+                output.Write(new byte[1], 0, (new byte[1]).Length);
+                listener.Stop();
+                this.UpdateDiscordPresence(Json);
                 this.Listen();
-            });
-            
+            }
+            catch (ThreadAbortException)
+            {
+                this.UpdateServiceStatus(ServiceState.SERVICE_STOPPED);
+                discordClient.ClearPresence();
+                discordClient.Dispose();
+            }
         }
 
         private string GetRequestData(HttpListenerRequest request)
@@ -99,147 +95,51 @@ namespace CSGO_Presence
 
         private void UpdateDiscordPresence(dynamic jsondata)
         {
-            File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\test.json", "yalla");
-            //File.WriteAllText(@"C:\Program Files (x86)\Steam\steamapps\common\Counter-Strike Global Offensive\csgo\cfg\test.json", jsondata);
-            RichPresence presence = new RichPresence()
+            RichPresence presence = new RichPresence() { Assets = new Assets() };
+
+            if (jsondata.player.activity == "playing")
             {
-                
-            };
-
-            /*
-             * if (json.player.activity == "menu")
-                Mode = "In menus";
-
-            if (Steam_ID == null)
-                Steam_ID = json.player.steamid;
-
-
-            if (json.map != null)
-            {
-                if (Mode == "In menus" && json.map.phase.ToString() != "live")
+                if (jsondata.player.team == "T")
                 {
-                    Now = null;
+                    presence.State = $"{jsondata.map.team_ct.name} {jsondata.map.team_t.score} - {jsondata.map.team_ct.score} CT";
+                    presence.Assets.SmallImageKey = "tcoin";
                 }
                 else
                 {
-                    if (Now == null)
-                        Now = DateTime.UtcNow;
+                    presence.State = $"{jsondata.map.team_ct.name} {jsondata.map.team_ct.score} - {jsondata.map.team_t.score} T";
+                    presence.Assets.SmallImageKey = "ctcoin";
                 }
-                switch (json.map.mode.ToString())
+
+                string gamemode = jsondata.map.mode;
+                switch (jsondata.map.mode.ToString())
                 {
                     case "gungameprogressive":
-                        Mode = "Arms Race";
+                        gamemode = "Arms Race";
                         break;
                     case "gungametrbomb":
-                        Mode = "Demolition";
+                        gamemode = "Demolition";
                         break;
                     case "scrimcomp2v2":
-                        Mode = "Wingman";
+                        gamemode = "Wingman";
                         break;
                     default:
-                        Mode = char.ToUpper(json.map.mode.ToString().ToCharArray()[0]) + json.map.mode.ToString().Substring(1);
+                        gamemode = char.ToUpper(jsondata.map.mode.ToString().ToCharArray()[0]) + jsondata.map.mode.ToString().Substring(1);
                         break;
                 }
-                switch (json.map.name.ToString())
-                {
-                    case "de_cbble":
-                        Map = "Cobblestone";
-                        break;
-                    case "de_stmarc":
-                        Map = "St. Marc";
-                        break;
-                    case "de_dust2":
-                        Map = "Dust II";
-                        break;
-                    case "de_shortnuke":
-                        Map = "Nuke";
-                        break;
-                    default:
-                        if (json.map.name.ToString().StartsWith("workshop"))
-                        {
-                            WorkShop = true;
-                            Map = json.map.name.ToString().Substring(json.map.name.ToString().Split('/')[1].Length + json.map.name.ToString().Split('/')[2].Length + 1);
-                        }
-                        else
-                        {
-                            WorkShop = false;
-                            Map = char.ToUpper(json.map.name.ToString().Substring(3).ToCharArray()[0]) + json.map.name.ToString().Substring(4);
-                        }
-                        break;
-                }
-            }
 
-            if (json.player.team != null)
+                string mapname = jsondata.map.name;
+                if (mapname.StartsWith("workshop"))
+                    mapname = mapname.Split('/')[1];
+
+                presence.Details = $"{jsondata.map.mode} on {mapname}";
+            }
+            else if (jsondata.player.activity == "menu")
             {
-                if (json.player.team.ToString() == "CT")
-                    TeamName = "Counter-Terrorists";
-                else
-                    TeamName = "Terrorists";
-                if (json.player.match_stats != null)
-                {
-                    if (json.player.steamid == Steam_ID)
-                    {
-                        string s = json.player.team.ToString() == "T"
-                            ? $"Score: {json.map.team_t.score}:{json.map.team_ct.score}"
-                            : $"Score: {json.map.team_ct.score}:{json.map.team_t.score}";
-                        presence.State = $"K: {json.player.match_stats.kills} / A: {json.player.match_stats.assists} / D: {json.player.match_stats.deaths}. {s}";
-                    }
-                    else
-                    {
-                        presence.State = $"Spectating. Score: T: {json.map.team_t.score} / CT: {json.map.team_ct.score}";
-                    }
-                }
-                presence.Details = $"Playing {Mode}";
-                if (Now != null)
-                {
-                    presence.Timestamps = new Timestamps()
-                    {
-                        Start = Now
-                    };
-
-                }
-                if (!WorkShop)
-                {
-                    presence.Assets = new Assets()
-                    {
-                        LargeImageKey = Map.ToLower().Replace(' ', '_'),
-                        LargeImageText = Map,
-                        SmallImageKey = json.player.team.ToString().ToLower(),
-                        SmallImageText = TeamName
-                    };
-                }
-                else
-                {
-                    presence.Assets = new Assets()
-                    {
-                        LargeImageKey = "workshop",
-                        LargeImageText = Map,
-                        SmallImageKey = json.player.team.ToString().ToLower(),
-                        SmallImageText = TeamName
-                    };
-                }
-                client.SetPresence(presence);
+                presence.Details = "CS:GO - In Menu";
+                presence.State = "Lobby";
             }
-            else if (Mode == "In menus")
-            {
-                presence.Details = Mode;
-                presence.Assets = new Assets()
-                {
-                    LargeImageKey = "idle",
-                    LargeImageText = "In menus"
-                };
-                presence.Timestamps = new Timestamps()
-                {
-                    Start = Start
-                };
-                client.SetPresence(presence);
-            }
-            */
-        }
 
-        public static void Main(string[] args)
-        {
-            new Service();
+            discordClient.SetPresence(presence);
         }
     }
 

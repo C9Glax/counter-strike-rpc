@@ -1,8 +1,6 @@
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO_Presence.Properties.Resources.resources
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.csproj.GenerateResource.cache
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.csproj.CoreCompileInputs.cache
-D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\CSGO Presence.exe.config
-D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\CSGO Presence.exe
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\CSGO Presence.pdb
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\DiscordRPC.dll
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\Newtonsoft.Json.dll
@@ -12,5 +10,9 @@ D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\Newtonso
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\Newtonsoft.Json.xml
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.csprojAssemblyReference.cache
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.csproj.CopyComplete
-D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.exe
 D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.pdb
+D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO_Presence.ProjectInstaller.resources
+D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO_Presence.CSGORichPresence.resources
+D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\CSGO Presence.dll.config
+D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\bin\Debug\CSGO Presence.dll
+D:\Dokumente\GitHub\Lilwiggy\counter-strike-rpc\CSGO Presence\obj\Debug\CSGO Presence.dll

@@ -1,4 +1,4 @@
-"CSGO PresenceService V1"
+"CSGO PresenceService v.1"
 {
     "uri" "{uri}"
     "timeout" "5.0"
@@ -9,6 +9,7 @@
         "map" "1"
         "round" "1"
         "player_match_stats" "1"
+		"round" "1"
         "player_id" "1"
    }
 }
