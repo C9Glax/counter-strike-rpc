@@ -43,6 +43,7 @@
             this.serviceInstaller1.DisplayName = "CSGORichPresence";
             this.serviceInstaller1.ServiceName = "CSGORichPresence";
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.serviceInstaller1.DelayedAutoStart = true;
             // 
             // ProjectInstaller
             // 

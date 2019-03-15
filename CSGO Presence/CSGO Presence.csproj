@@ -116,9 +116,6 @@
     <None Include="Resources\gamestate_integration_discordpresence.cfg.txt" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="install.bat" />
   </ItemGroup>
   <ItemGroup>
