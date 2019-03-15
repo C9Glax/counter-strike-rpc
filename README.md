@@ -1,16 +1,33 @@
-##Introduction
+# CS:GO Rich Presence Service
 
-This is a Windows-Service that will automatically Start, install itself into CS:GO (readup on csgo-gamestate) and send data as Richpresence to Discord.  
+Adds a Windows Services which passes RichPresence-data to Discord based on the CS:GO gamestate.
 
-##Installation
+## Getting Started
 
-To install download the Application and run 'install.bat' **As Administrator**.  
+Download the Archive and execute 'install.bat' * AS ADMINISTRATOR*
 
-##Download  
+### Prerequisites
 
-Simply download the archive  
+A Windows-System. Unfortunately this Program is a Windows Service so no-can-do.
 
-##TODO
+## Built With
 
-As of now, the program only works with the default installation-location.
-If you have a suggestion on how to easily change/grab the installation-location, let me know.
+* [Lilwiggy's Counter-Strike-RPC](https://github.com/Lilwiggy/counter-strike-rpc) - The basic idea
+* [Lachee's Discord Richpresence C# Framework](https://github.com/Lachee/discord-rpc-csharp) - Dependency Management
+
+## Contributing
+
+This project as any of my projects will not be actively monitored.
+
+## Versioning
+
+Any Release will be a major Version (eg. V1, V2)
+
+## Authors
+
+* **C9Glax** - *Initial work*
+Also credit to [Lilwiggy](https://github.com/Lilwiggy/counter-strike-rpc)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
