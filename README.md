@@ -4,7 +4,7 @@ Adds a Windows Services which passes RichPresence-data to Discord based on the C
 
 ## Getting Started
 
-Download the Archive and execute 'install.bat' * AS ADMINISTRATOR *
+Download the Archive and execute 'install.bat' **AS ADMINISTRATOR**
 
 ### Prerequisites
 
