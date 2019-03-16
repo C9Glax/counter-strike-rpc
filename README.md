@@ -14,6 +14,7 @@ A Windows-System. Unfortunately this Program is a Windows Service so no-can-do.
 ## Known Issues  
 
 * Sometimes Service does not detect running game. This is fixed be restarting the service. Probable cause: the port is not changed frequently enough.
+* CS:GO needs to be installed in the default location
 
 ## Built With
 
