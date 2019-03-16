@@ -1,6 +1,7 @@
 # CS:GO Rich Presence Service
 
 Adds a Windows Services which passes RichPresence-data to Discord based on the CS:GO gamestate.
+[Images](https://i.imgur.com/b8D7TpH.png)
 
 ## Getting Started
 
@@ -8,7 +9,11 @@ Download the Archive and execute 'install.bat' **AS ADMINISTRATOR**
 
 ### Prerequisites
 
-A Windows-System. Unfortunately this Program is a Windows Service so no-can-do.
+A Windows-System. Unfortunately this Program is a Windows Service so no-can-do.  
+
+## Known Issues  
+
+* Sometimes Service does not detect running game. This is fixed be restarting the service. Probable cause: the port is not changed frequently enough.
 
 ## Built With
 
