@@ -1,5 +1,5 @@
 echo off
-title "Deinstallation"
+title "Uninstall"
 cls
-"%~dp0installutil.exe" -u "%~dp0\bin\Release\CSGO Presence.exe"
+"%~dp0installutil.exe" -u "C:\Program Files\CSGORichPresence\CSGO Presence.exe"
 pause
